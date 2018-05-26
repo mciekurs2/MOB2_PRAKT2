@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">TresaisPraktiskais</string>
+    <string name="sampleName">Sample name</string>
+
+    <!--Activity nosaukumi-->
+    <string name="title_activity_maps">Maps Activity</string>
+    <string name="tittle_activity_github">Github Activity</string>
+
+    <!--Menu nosaukumi-->
+    <string name="menu_maps">Maps</string>
+    <string name="menu_github">Github</string>
+
+    <!--Github activity-->
+    <string name="hintUser">Enter github username</string>
+    <string name="buttonSearch">Search</string>
+    <string name="noData">Enter valid data first</string>
+
+</resources>
