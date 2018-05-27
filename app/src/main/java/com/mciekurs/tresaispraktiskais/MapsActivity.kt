@@ -11,16 +11,17 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.view.Menu
 import android.view.MenuItem
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var locationManager: LocationManager
+    private var lat: Double = 0.0
+    private var long: Double = 0.0
+    private var latLng = LatLng(lat, long)
 
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,29 +54,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     0, 0.0f, locationListener)
         }
-
     }
 
     private val locationListener: LocationListener = object : LocationListener{
+        @SuppressLint("MissingPermission")
         override fun onLocationChanged(location: Location) {
-            val latitude = location.latitude
-            val longitude = location.longitude
+            lat = location.latitude
+            long = location.longitude
 
             //saglabā kā koordinātes
-            val latLng = LatLng(latitude, longitude)
-            //pārveido reālā adresē
-            val geocoder = Geocoder(applicationContext)
-            val adress = geocoder.getFromLocation(latitude, longitude, 1)
+            latLng = LatLng(lat, long)
 
-            //izveido nosaukumu atrašanās vietai
-            var tittle = "${adress[0].locality},"
-            tittle += adress[0].countryName
+            //pārvieotjas uz atrašanās vietu
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.2f))
 
-            //uzliek atrašanās punktu
-            mMap.addMarker(MarkerOptions().position(latLng).title(tittle))
-            //pārvieto kameru uz atrašanās vietu
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10.2f))
-
+            /** Var izmatot marker vai arī 'mMap.isMyLocationEnabled = true' */
+            mMap.addMarker(MarkerOptions().position(latLng))
         }
 
         override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
@@ -87,7 +81,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
+        //iezīmē galvenās ielas
+        mMap.isTrafficEnabled = true
+        //parāda tuvākāsās vietas
+        mMap.isBuildingsEnabled = true
 
     }
 
