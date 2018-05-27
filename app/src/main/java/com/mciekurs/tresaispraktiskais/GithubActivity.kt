@@ -29,6 +29,7 @@ class GithubActivity : AppCompatActivity() {
         recyclerView_github.layoutManager = manager
 
         button_confirm.setOnClickListener {
+            //dabu ievadīto username nosaukumu
             jsonToList(editText_repoUser.text.toString())
             //nestrādā nezināmu iemeslu dēļ
             editText_repoUser.clearFocus()
@@ -37,6 +38,7 @@ class GithubActivity : AppCompatActivity() {
 
     }
 
+    /** Nodrošina json pārveidoshu uz sarakstu un piesaistīšanu recyclerView */
     private fun jsonToList(username: String){
         val url = "https://api.github.com/users/$username/repos"
         val request = Request.Builder().url(url).build()
@@ -49,24 +51,26 @@ class GithubActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                val gson = GsonBuilder().create()
-                try {
-                    list = gson.fromJson(body, Array<UserRepos>::class.java).asList()
-                    runOnUiThread { recyclerView_github.adapter = ViewAdapter(list) }
-                } catch (ex: IllegalStateException){
-                    //nestrāda
+                //pārbauda vai nav kļudas paziņojumi
+                if (body?.toLowerCase()?.contains("not found".toLowerCase())!!){
                     return
                 }
+                val gson = GsonBuilder().create()
+                list = gson.fromJson(body, Array<UserRepos>::class.java).asList()
+                runOnUiThread { recyclerView_github.adapter = ViewAdapter(list) }
+
             }
         })
     }
 
+    /** Piesaista menu layout file */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflate = menuInflater
         inflate.inflate(R.menu.menu_maps, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
+    /** nodrošina opciju funkcionalitāti */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.maps -> {

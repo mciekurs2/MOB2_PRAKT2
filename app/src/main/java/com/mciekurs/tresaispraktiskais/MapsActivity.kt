@@ -13,7 +13,6 @@ import android.view.Menu
 import android.view.MenuItem
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -68,8 +67,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             //pārvieotjas uz atrašanās vietu
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.2f))
 
-            /** Var izmatot marker vai arī 'mMap.isMyLocationEnabled = true' */
-            mMap.addMarker(MarkerOptions().position(latLng))
+            /** Var izmantot arī ' mMap.addMarker' */
+            //mMap.addMarker(MarkerOptions().position(latLng))
         }
 
         override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
@@ -79,12 +78,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         override fun onProviderDisabled(provider: String?) {}
     }
 
+    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         //iezīmē galvenās ielas
         mMap.isTrafficEnabled = true
         //parāda tuvākāsās vietas
         mMap.isBuildingsEnabled = true
+        //parāda current location
+        mMap.isMyLocationEnabled = true
 
     }
 

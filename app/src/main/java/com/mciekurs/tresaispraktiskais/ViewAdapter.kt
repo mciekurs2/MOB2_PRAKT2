@@ -30,8 +30,10 @@ class ViewAdapter(private val userRepos: List<UserRepos>) : RecyclerView.Adapter
 
         holder.view.textView_repoName.text = repos.name
         holder.view.textView_size.text = "${repos.size} KB"
+        //nodrošina bilžu ielādi no url
         Glide.with(holder.view.context).load(repos.owner.avatar_url).into(holder.view.imageView_userImage)
 
+        //atver saiti, kad tiek uz viņu nokklikšķināts
         holder.view.setOnClickListener {
             val webBrowser = Intent(Intent.ACTION_VIEW, Uri.parse(repos.html_url))
             holder.view.context.startActivity(webBrowser)
